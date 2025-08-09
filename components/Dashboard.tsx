@@ -25,10 +25,18 @@ export default function Dashboard() {
   const [showUpload, setShowUpload] = useState(false)
   const [newSymbol, setNewSymbol] = useState('')
   const [selectedSymbols, setSelectedSymbols] = useState<Set<string>>(new Set())
+  const [isClient, setIsClient] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const itemsPerPage = 12
 
+  // Fix hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const fetchData = async () => {
+    if (!isClient) return
+    
     try {
       const response = await fetch('/api/proxy/data')
       const data = await response.json()
@@ -47,11 +55,13 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    if (!isClient) return
+    
     fetchData()
     const interval = setInterval(fetchData, 15000) // Update every 15 seconds
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isClient])
 
   const getSignalColor = (signal: string) => {
     switch (signal) {
@@ -183,6 +193,22 @@ export default function Dashboard() {
   const totalPages = Math.ceil(sortedData.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage)
+
+  // Prevent hydration mismatch by only rendering on client
+  if (!isClient) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #4c1d95 100%)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{ fontSize: '1.25rem' }}>✨ Loading Enhanced HPMREI Dashboard...</div>
+      </div>
+    )
+  }
 
   return (
     <div style={{
