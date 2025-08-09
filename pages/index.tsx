@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import LoginForm from '../components/LoginForm'
-import Dashboard from '../components/Dashboard'
+
+// Dynamically import Dashboard with no SSR to prevent hydration issues
+const Dashboard = dynamic(() => import('../components/Dashboard'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+      <div className="text-white text-xl">✨ Loading Enhanced HPMREI Dashboard...</div>
+    </div>
+  )
+})
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isClient) return
-    
     // Check if already authenticated
     fetch('/api/auth/check')
       .then(res => {
@@ -24,9 +27,9 @@ export default function Home() {
       })
       .catch(console.error)
       .finally(() => setIsLoading(false))
-  }, [isClient])
+  }, [])
 
-  if (!isClient || isLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-white text-xl">✨ Loading Enhanced HPMREI Dashboard v2.0...</div>
