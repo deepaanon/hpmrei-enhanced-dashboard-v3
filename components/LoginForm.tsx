@@ -53,11 +53,13 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
             <input
               type="password"
               id="password"
+              name="password"
               value={password}
               onChange={(e: any) => setPassword(e.target.value)}
               className="w-full px-3 py-2 bg-trading-bg border border-trading-border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter dashboard password"
               required
+              autoComplete="current-password"
             />
           </div>
 

@@ -299,8 +299,11 @@ export default function Dashboard() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-600 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold mb-4">Add New Symbol</h3>
+            <label htmlFor="new-symbol-input" className="block text-sm font-medium mb-2">Symbol</label>
             <input
               type="text"
+              id="new-symbol-input"
+              name="newSymbol"
               value={newSymbol}
               onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
               placeholder="Enter symbol (e.g., BTCUSDT)"
@@ -331,8 +334,11 @@ export default function Dashboard() {
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-600 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold mb-4">Upload Symbol List</h3>
             <p className="text-gray-400 mb-4">Upload a CSV or TXT file with trading symbols (one per line)</p>
+            <label htmlFor="file-upload-input" className="block text-sm font-medium mb-2">File</label>
             <input
               type="file"
+              id="file-upload-input"
+              name="fileUpload"
               ref={fileInputRef}
               onChange={handleFileUpload}
               accept=".csv,.txt"
@@ -355,8 +361,10 @@ export default function Dashboard() {
         <h3 className="text-xl font-bold mb-4 text-blue-400">🎛️ Filters & Controls</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Filter by Signal</label>
+            <label htmlFor="signal-filter" className="block text-sm font-medium mb-2">Filter by Signal</label>
             <select 
+              id="signal-filter"
+              name="signalFilter"
               value={filter} 
               onChange={(e: any) => setFilter(e.target.value)}
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 backdrop-blur-sm"
@@ -371,8 +379,10 @@ export default function Dashboard() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">Sort by</label>
+            <label htmlFor="sort-by" className="block text-sm font-medium mb-2">Sort by</label>
             <select 
+              id="sort-by"
+              name="sortBy"
               value={sortBy} 
               onChange={(e: any) => setSortBy(e.target.value)}
               className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 backdrop-blur-sm"
