@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import LoginForm from '../components/LoginForm'
 
 // Dynamically import Dashboard with no SSR to prevent hydration issues
-const Dashboard = dynamic(() => import('../components/Dashboard'), {
+const Dashboard = dynamic(() => import('../components/DashboardClean'), {
   ssr: false,
   loading: () => (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
