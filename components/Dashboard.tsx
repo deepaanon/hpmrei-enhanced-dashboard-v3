@@ -173,27 +173,6 @@ export default function Dashboard() {
     }
   }
 
-  // Filter and sort data
-  const filteredData = Object.entries(marketData).filter(([symbol, data]: [string, any]) => {
-    if (filter === 'ALL') return true
-    return data.signal === filter
-  })
-
-  const sortedData = filteredData.sort(([aSymbol, aData]: [string, any], [bSymbol, bData]: [string, any]) => {
-    switch (sortBy) {
-      case 'symbol': return aSymbol.localeCompare(bSymbol)
-      case 'signal': return aData.signal.localeCompare(bData.signal)
-      case 'score': return bData.score - aData.score
-      case 'change': return (bData.change_24h || 0) - (aData.change_24h || 0)
-      default: return 0
-    }
-  })
-
-  // Pagination
-  const totalPages = Math.ceil(sortedData.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage)
-
   // Prevent hydration mismatch by only rendering on client
   if (!isClient) {
     return (
@@ -209,6 +188,29 @@ export default function Dashboard() {
       </div>
     )
   }
+
+  // Filter and sort data - only run on client
+  const filteredData = Object.entries(marketData || {}).filter(([symbol, data]: [string, any]) => {
+    if (!data) return false
+    if (filter === 'ALL') return true
+    return data.signal === filter
+  })
+
+  const sortedData = filteredData.sort(([aSymbol, aData]: [string, any], [bSymbol, bData]: [string, any]) => {
+    if (!aData || !bData) return 0
+    switch (sortBy) {
+      case 'symbol': return aSymbol.localeCompare(bSymbol)
+      case 'signal': return (aData.signal || '').localeCompare(bData.signal || '')
+      case 'score': return (bData.score || 0) - (aData.score || 0)
+      case 'change': return (bData.change_24h || 0) - (aData.change_24h || 0)
+      default: return 0
+    }
+  })
+
+  // Pagination
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const currentData = sortedData.slice(startIndex, startIndex + itemsPerPage)
 
   return (
     <div style={{
