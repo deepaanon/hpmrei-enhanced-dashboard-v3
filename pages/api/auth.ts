@@ -12,7 +12,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
   
   // Check password - NO IP restrictions whatsoever
-  if (password === 'hpmrei2025') {
+  const expectedPassword = process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || 'hpmrei2025'
+  
+  if (password === expectedPassword) {
     res.setHeader('Set-Cookie', [
       `hpmrei-auth=authenticated; HttpOnly; Path=/; Max-Age=86400`
     ])

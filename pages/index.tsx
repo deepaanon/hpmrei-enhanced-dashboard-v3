@@ -6,8 +6,15 @@ import Dashboard from '../components/Dashboard'
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+    
     // Check if already authenticated
     fetch('/api/auth/check')
       .then(res => {
@@ -17,9 +24,9 @@ export default function Home() {
       })
       .catch(console.error)
       .finally(() => setIsLoading(false))
-  }, [])
+  }, [isClient])
 
-  if (isLoading) {
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-white text-xl">✨ Loading Enhanced HPMREI Dashboard v2.0...</div>
